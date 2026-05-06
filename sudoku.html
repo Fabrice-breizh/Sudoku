@@ -130,11 +130,41 @@
             background-attachment: fixed;
             color: var(--text-main);
             min-height: 100vh;
-            display: flex; justify-content: center; align-items: center;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
             padding: 20px; transition: background 0.3s ease, color 0.3s ease;
             overflow-x: hidden;
         }
         .container { max-width: 1000px; width: 100%; position: relative; z-index: 10; }
+        .site-footer {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+            width: max-content;
+            max-width: min(100%, 1000px);
+            margin-top: 16px;
+            padding: 9px 16px;
+            border-radius: 999px;
+            background: rgba(9, 13, 22, 0.78);
+            color: rgba(245, 247, 255, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-size: 0.92rem;
+            line-height: 1.25;
+        }
+        .site-footer a { color: #d7c8ff; text-decoration: none; font-weight: 700; }
+        .site-footer a:hover, .site-footer a:focus-visible { text-decoration: underline; }
+        .site-footer .footer-sep { color: rgba(245, 247, 255, 0.45); }
+        .footer-support { display: inline-flex; align-items: center; gap: 0.28rem; color: #f5d987 !important; }
+        .footer-support strong { color: #ffe68d; font-weight: 800; }
+        .footer-strike { color: #e7c0a0; text-decoration-line: line-through; text-decoration-color: #d76a7d; text-decoration-thickness: 0.14em; }
+        .footer-cup { width: 1.05em; height: 1.05em; color: #d9b963; flex: 0 0 auto; stroke-width: 1.9; }
         
         .screen {
             display: none !important;
@@ -303,6 +333,7 @@
             .container,
             .top-toggles,
             .overlay,
+            .site-footer,
             #welcomeScreen,
             #gameScreen,
             #scoresScreen,
@@ -415,6 +446,9 @@
            8. MEDIA QUERIES (MOBILE)
            ========================================= */
         @media (max-width: 768px) {
+            body { padding: 14px 14px 10px; align-items: center; justify-content: flex-start; }
+            .site-footer { margin-top: 14px; padding: 8px 12px; border-radius: 18px; font-size: 0.82rem; width: 100%; max-width: 500px; row-gap: 5px; }
+            .site-footer .footer-text { width: 100%; text-align: center; }
             .game-layout { flex-direction: column; align-items: center; gap: 20px; }
             .game-side-controls {
                 display: grid;
@@ -629,6 +663,29 @@
     </div>
     
     <div id="printGridsContainer" class="only-print"></div>
+
+    <footer class="site-footer no-print" aria-label="Source code and support">
+        <span class="footer-text">Source code and support:</span>
+        <a href="https://github.com/Fabrice-breizh" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <span class="footer-sep" aria-hidden="true">·</span>
+        <a class="footer-support" href="https://www.buymeacoffee.com/fabricebreizh" target="_blank" rel="noopener noreferrer" aria-label="Buy me some tokens">
+            <svg class="footer-cup" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 5h10v6a5 5 0 0 1-10 0V5Z"></path>
+                <path d="M15 7h2a3 3 0 0 1 0 6h-2"></path>
+                <path d="M4 19h13"></path>
+                <path d="M7 22h7"></path>
+            </svg>
+            <span>Buy me</span>
+            <span class="footer-strike">a coffee</span>
+            <strong>some tokens</strong>
+            <svg class="footer-cup" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 5h10v6a5 5 0 0 1-10 0V5Z"></path>
+                <path d="M15 7h2a3 3 0 0 1 0 6h-2"></path>
+                <path d="M4 19h13"></path>
+                <path d="M7 22h7"></path>
+            </svg>
+        </a>
+    </footer>
 
     <script>
         // -----------------------------------------
