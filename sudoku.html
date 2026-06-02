@@ -169,7 +169,7 @@
         .screen {
             display: none !important;
             background: var(--screen-bg);
-            border-radius: 20px; padding: 40px;
+            border-radius: 20px; padding: 24px 28px 20px;
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
             backdrop-filter: blur(8px);
         }
@@ -242,10 +242,74 @@
         /* =========================================
            4. GAME (RESPONSIVE GRID AND CELLS)
            ========================================= */
-        .game-layout { display: flex; gap: 40px; justify-content: center; align-items: flex-start; width: 100%; max-width: 900px; }
-        .game-side-controls { display: flex; flex-direction: column; gap: 10px; }
-        
-        .sudoku-container { width: 100%; max-width: 450px; }
+
+        /* --- Top bar (replaces title block + game-header) --- */
+        .game-topbar {
+            display: flex; align-items: center; justify-content: space-between;
+            width: 100%; max-width: 860px;
+            margin-bottom: 10px;
+            padding: 0 4px;
+        }
+        .game-topbar-title .topbar-kanji {
+            font-size: 1.6em; letter-spacing: 0.15em; font-weight: 300;
+            color: var(--text-main);
+        }
+        .game-topbar-mid {
+            font-size: 0.78em; letter-spacing: 0.25em; text-transform: uppercase;
+            color: var(--text-light); font-weight: 300; text-align: center;
+        }
+        .game-topbar-right {
+            display: flex; align-items: center; gap: 10px;
+        }
+        .timer { font-size: 1.1em; letter-spacing: 0.1em; color: var(--text-main); }
+
+        /* --- 3-column main layout --- */
+        .game-layout {
+            display: grid;
+            grid-template-columns: 130px minmax(0, 440px) 130px;
+            gap: 16px;
+            justify-content: center;
+            align-items: start;
+            width: 100%;
+            max-width: 860px;
+        }
+
+        /* --- LEFT PANEL: keyboard hints --- */
+        .game-left-panel {
+            background: rgba(9,13,22,0.72);
+            border: 1px solid rgba(255,255,255,0.10);
+            border-radius: 14px;
+            padding: 12px 10px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            font-family: system-ui, sans-serif;
+            color: rgba(245,247,255,0.75);
+            font-size: 0.76rem;
+        }
+        .kb-panel-title {
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(245,247,255,0.45);
+            margin-bottom: 10px;
+        }
+        .kb-panel-list { display: flex; flex-direction: column; gap: 7px; }
+        .kb-row { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+        .kb-row .kb-key {
+            display: inline-flex; align-items: center; justify-content: center;
+            min-width: 20px; height: 19px; padding: 0 4px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.13);
+            border: 1px solid rgba(255,255,255,0.25);
+            color: #fff; font-size: 0.72rem; font-weight: 600;
+        }
+        .kb-row .kb-sep { color: rgba(245,247,255,0.30); font-size: 0.7rem; }
+        .kb-row .kb-label { color: rgba(245,247,255,0.65); font-size: 0.72rem; margin-left: 3px; }
+
+        /* --- CENTER: sudoku grid --- */
+        .sudoku-container { width: 100%; }
         
         .sudoku-grid {
             display: grid; grid-template-columns: repeat(9, 1fr); gap: 0;
@@ -254,6 +318,69 @@
             width: 100%; aspect-ratio: 1; 
         }
         
+        /* --- RIGHT PANEL: phone numpad + action buttons --- */
+        .game-right-panel {
+            display: flex; flex-direction: column; gap: 10px; align-items: stretch;
+        }
+
+        /* Phone numpad: 3 columns */
+        .numpad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            width: 100%;
+        }
+        .num-btn {
+            position: relative; padding: 0; aspect-ratio: 1;
+            font-size: clamp(1rem, 2.5vw, 1.4rem);
+            text-align: center; display: flex; align-items: center; justify-content: center;
+            background: var(--cell-bg); border: 1px solid var(--cell-border);
+            border-radius: 8px; cursor: pointer; color: var(--text-main);
+            transition: opacity 0.3s, background 0.15s;
+            touch-action: manipulation;
+        }
+        /* Delete button spans full width */
+        .num-btn.del-btn {
+            grid-column: 1 / -1;
+            aspect-ratio: auto;
+            padding: 8px 0;
+            font-size: 1.1rem;
+        }
+        .num-btn:active { background: var(--btn-hover-bg); color: var(--btn-hover-text); }
+        .num-btn.completed { opacity: 0.3; }
+        .num-count {
+            position: absolute; top: 2px; right: 4px;
+            font-size: 0.45em; font-family: sans-serif;
+            color: var(--text-light); font-weight: bold;
+        }
+
+        /* Action buttons: compact pills */
+        .action-btns {
+            display: flex; flex-direction: column; gap: 5px;
+        }
+        .action-btn {
+            display: flex; align-items: center; justify-content: center; gap: 5px;
+            padding: 7px 8px; font-size: 0.75em;
+            border: 1.5px solid var(--btn-border);
+            background: transparent; color: var(--text-main);
+            border-radius: 8px; cursor: pointer;
+            transition: all 0.2s; font-family: 'Georgia', serif;
+            letter-spacing: 0.05em; text-transform: uppercase;
+            white-space: nowrap; width: 100%;
+        }
+        .action-btn:hover, .action-btn.selected {
+            background: var(--btn-hover-bg); color: var(--btn-hover-text);
+        }
+        .action-btn-quit {
+            border-color: var(--heart-color); color: var(--heart-color);
+        }
+        .action-badge {
+            display: inline-flex; align-items: center; justify-content: center;
+            min-width: 18px; height: 18px; padding: 0 4px;
+            background: rgba(0,0,0,0.08); border-radius: 99px;
+            font-size: 0.85em; font-family: sans-serif;
+        }
+
         .cell {
             width: auto; height: auto; aspect-ratio: 1; 
             border: 1px solid var(--cell-border);
@@ -282,11 +409,42 @@
         .draft-num { display: flex; align-items: center; justify-content: center; color: var(--text-light); line-height: 1; }
         .draft-num.conflict { color: var(--cell-conflict-color); font-weight: bold; }
 
-        .numpad { display: none; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 20px; width: 100%; }
-        .num-btn { position: relative; padding: 15px; font-size: 1.5rem; text-align: center; background: var(--cell-bg); border: 1px solid var(--cell-border); border-radius: 8px; cursor: pointer; color: var(--text-main); transition: opacity 0.3s; touch-action: manipulation; }
-        .num-btn:active { background: var(--btn-hover-bg); color: var(--btn-hover-text); }
-        .num-btn.completed { opacity: 0.3; }
-        .num-count { position: absolute; top: 3px; right: 5px; font-size: 0.5em; font-family: sans-serif; color: var(--text-light); font-weight: bold; }
+        @keyframes digitComplete {
+            0%   { transform: scale(1);    background: var(--cell-bg); }
+            25%  { transform: scale(1.35); background: var(--cell-validated-color); color: white; box-shadow: 0 0 18px var(--cell-validated-color); }
+            60%  { transform: scale(0.92); }
+            80%  { transform: scale(1.12); }
+            100% { transform: scale(1);    opacity: 0.3; }
+        }
+        .num-btn.digit-complete-anim {
+            animation: digitComplete 0.6s ease forwards;
+        }
+
+        @keyframes digitToastIn {
+            0%   { opacity: 0; transform: translateX(-50%) translateY(10px) scale(0.8); }
+            40%  { opacity: 1; transform: translateX(-50%) translateY(-4px) scale(1.08); }
+            70%  { transform: translateX(-50%) translateY(0px) scale(1); }
+            85%  { opacity: 1; }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-20px) scale(0.9); }
+        }
+        .digit-toast {
+            position: absolute;
+            left: 50%;
+            top: -44px;
+            transform: translateX(-50%);
+            background: var(--cell-validated-color, #5a8b5a);
+            color: white;
+            font-size: 1.1em;
+            font-family: 'Georgia', serif;
+            letter-spacing: 0.08em;
+            padding: 6px 18px;
+            border-radius: 20px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+            pointer-events: none;
+            z-index: 50;
+            white-space: nowrap;
+            animation: digitToastIn 1.5s ease forwards;
+        }
 
         .game-header { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 20px; font-size: 1.5em; }
 
@@ -442,6 +600,8 @@
             }
         }
 
+        }
+
         /* =========================================
            8. MEDIA QUERIES (MOBILE)
            ========================================= */
@@ -449,18 +609,26 @@
             body { padding: 14px 14px 10px; align-items: center; justify-content: flex-start; }
             .site-footer { margin-top: 14px; padding: 8px 12px; border-radius: 18px; font-size: 0.82rem; width: 100%; max-width: 500px; row-gap: 5px; }
             .site-footer .footer-text { width: 100%; text-align: center; }
-            .game-layout { flex-direction: column; align-items: center; gap: 20px; }
-            .game-side-controls {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 8px;
-                width: 100%;
-                max-width: 450px;
+            /* On mobile: single column, left panel hidden, numpad below grid */
+            .game-layout {
+                grid-template-columns: 1fr;
+                gap: 14px;
             }
-            .game-side-controls .btn { margin: 0; width: 100%; text-align: center; }
-            .game-side-controls .btn:last-child:nth-child(odd) { grid-column: 1 / -1; }
-            .numpad { display: grid; }
+            .game-left-panel { display: none; }
+            .game-right-panel {
+                flex-direction: row; flex-wrap: wrap; gap: 8px; align-items: flex-start;
+                justify-content: center;
+            }
+            .numpad { width: 280px; }
+            .action-btns {
+                display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+                flex: 1; min-width: 200px;
+            }
         }
+
+        /* sticky footer */
+        body { justify-content: flex-start; }
+        .body-spacer { flex: 1 1 auto; min-height: 16px; }
 
         /* =========================================
            9. ANIMATIONS (RIPPLE, POP, SHAKE, GROUP)
@@ -550,6 +718,8 @@
         </div>
     </div>
 
+    <div class="body-spacer"></div>
+
     <div class="container">
         <div id="welcomeScreen" class="screen active flex-col-center">
             <div class="title" style="margin-bottom: 30px;">
@@ -584,27 +754,70 @@
         </div>
 
         <div id="gameScreen" class="screen flex-col-center">
-            <div class="title small-title">
-                <h1 data-i18n="sudoku">數独</h1>
-                <h2 id="modeIndicator">ARCADE - EASY</h2>
+
+            <!-- Compact top bar: title left · mode/diff center · timer+lives right -->
+            <div class="game-topbar">
+                <div class="game-topbar-title">
+                    <span class="topbar-kanji" data-i18n="sudoku">數独</span>
+                </div>
+                <div class="game-topbar-mid">
+                    <span id="modeIndicator">ARCADE - EASY</span>
+                </div>
+                <div class="game-topbar-right">
+                    <div class="timer" id="timerDisplay" aria-live="polite">00:00</div>
+                    <div class="hearts" id="livesDisplay"></div>
+                </div>
             </div>
-            <div class="game-header">
-                <div class="timer" id="timerDisplay" aria-live="polite">00:00</div>
-                <div class="hearts" id="livesDisplay"></div>
-            </div>
+
+            <!-- 3-column main layout -->
             <div class="game-layout">
+
+                <!-- LEFT: keyboard hints (desktop only) -->
+                <div class="game-left-panel" id="gameLeftPanel">
+                    <div class="kb-panel-title" data-i18n="kbTitle">Raccourcis</div>
+                    <div class="kb-panel-list">
+                        <div class="kb-row"><span class="kb-key">1</span><span class="kb-sep">–</span><span class="kb-key">9</span><span class="kb-label" data-i18n="kbDigit">Saisir</span></div>
+                        <div class="kb-row"><span class="kb-key">⌦</span><span class="kb-sep">/</span><span class="kb-key">0</span><span class="kb-label" data-i18n="kbDelete">Effacer</span></div>
+                        <div class="kb-row"><span class="kb-key">↑</span><span class="kb-key">↓</span><span class="kb-key">←</span><span class="kb-key">→</span><span class="kb-label" data-i18n="kbArrows">Déplacer</span></div>
+                        <div class="kb-row"><span class="kb-key">D</span><span class="kb-label" data-i18n="kbDraft">Notes</span></div>
+                        <div class="kb-row"><span class="kb-key">H</span><span class="kb-label" data-i18n="kbHint">Indice</span></div>
+                        <div class="kb-row"><span class="kb-key">Space</span><span class="kb-label" data-i18n="kbPause">Pause</span></div>
+                        <div class="kb-row"><span class="kb-key">Esc</span><span class="kb-label" data-i18n="kbQuit">Quitter</span></div>
+                    </div>
+                </div>
+
+                <!-- CENTER: grid only -->
                 <div class="sudoku-container">
                     <div id="sudokuGrid" class="sudoku-grid"></div>
+                </div>
+
+                <!-- RIGHT: phone numpad + action buttons -->
+                <div class="game-right-panel">
+                    <!-- Phone-style numpad: 3 cols -->
                     <div class="numpad" id="numpad"></div>
+                    <!-- Action buttons as compact icon+label pills -->
+                    <div class="action-btns">
+                        <button class="action-btn" id="hintBtn" onclick="Game.useHint()" data-i18n-tooltip="ttHint" aria-label="Hint" data-i18n-aria="ariaHint">
+                            💡 <span data-i18n="hint">Indice</span> <span class="action-badge" id="hintsLeft">3</span>
+                        </button>
+                        <button class="action-btn" id="draftBtn" onclick="Game.toggleDraft()" data-i18n-tooltip="ttDraft" aria-label="Draft" data-i18n-aria="ariaDraft">
+                            📝 <span data-i18n="draft">Notes</span>
+                        </button>
+                        <button class="action-btn" onclick="Game.autoNotes()" data-i18n-tooltip="ttAutoNotes" aria-label="Auto-Notes" data-i18n-aria="ariaAutoNotes">
+                            ✏️ <span data-i18n="autoNotes">Auto-Notes</span>
+                        </button>
+                        <button class="action-btn" id="safeMovesBtn" onclick="Game.safeMoves()" style="display:none;" data-i18n-tooltip="ttSafeMoves" aria-label="Safe moves" data-i18n-aria="ariaSafeMoves">
+                            🎯 <span data-i18n="safeMoves">Coups sûrs</span>
+                        </button>
+                        <button class="action-btn" onclick="Game.togglePause()" data-i18n-tooltip="ttPause" aria-label="Pause" data-i18n-aria="ariaPause">
+                            ⏸️ <span data-i18n="pause">Pause</span>
+                        </button>
+                        <button class="action-btn action-btn-quit" onclick="Game.abandon()" data-i18n-tooltip="ttQuit" aria-label="Quit" data-i18n-aria="ariaQuit">
+                            🗑️ <span data-i18n="abandon">Quitter</span>
+                        </button>
+                    </div>
                 </div>
-                <div class="game-side-controls">
-                    <button class="btn" id="hintBtn" onclick="Game.useHint()" aria-label="Hint" data-i18n-aria="ariaHint" data-i18n-tooltip="ttHint">💡 <span data-i18n="hint">Hint</span> (<span id="hintsLeft">3</span>)</button>
-                    <button class="btn" id="draftBtn" onclick="Game.toggleDraft()" aria-label="Draft mode" data-i18n-aria="ariaDraft" data-i18n-tooltip="ttDraft">📝 <span data-i18n="draft">Draft</span></button>
-                    <button class="btn" onclick="Game.autoNotes()" aria-label="Auto-Notes" data-i18n-aria="ariaAutoNotes" data-i18n-tooltip="ttAutoNotes">✏️ <span data-i18n="autoNotes">Auto-Notes</span></button>
-                    <button class="btn" id="safeMovesBtn" onclick="Game.safeMoves()" style="display:none;" aria-label="Safe moves" data-i18n-aria="ariaSafeMoves" data-i18n-tooltip="ttSafeMoves">🎯 <span data-i18n="safeMoves">Safe Moves</span></button>
-                    <button class="btn" onclick="Game.togglePause()" aria-label="Pause" data-i18n-aria="ariaPause">⏸️ <span data-i18n="pause">Pause</span></button>
-                    <button class="btn" onclick="Game.abandon()" aria-label="Quit" data-i18n-aria="ariaQuit" style="border-color: var(--heart-color); color: var(--heart-color);">🗑️ <span data-i18n="abandon">Quit</span></button>
-                </div>
+
             </div>
         </div>
 
@@ -664,8 +877,10 @@
     
     <div id="printGridsContainer" class="only-print"></div>
 
+    <div class="body-spacer"></div>
+
     <footer class="site-footer no-print" aria-label="Source code and support">
-        <span class="footer-text">Source code and support:</span>
+        <span class="footer-text" data-i18n="footerSource">Source code and support:</span>
         <a href="https://github.com/Fabrice-breizh" target="_blank" rel="noopener noreferrer">GitHub</a>
         <span class="footer-sep" aria-hidden="true">·</span>
         <a class="footer-support" href="https://www.buymeacoffee.com/fabricebreizh" target="_blank" rel="noopener noreferrer" aria-label="Buy me some tokens">
@@ -675,9 +890,9 @@
                 <path d="M4 19h13"></path>
                 <path d="M7 22h7"></path>
             </svg>
-            <span>Buy me</span>
-            <span class="footer-strike">a coffee</span>
-            <strong>some tokens</strong>
+            <span data-i18n="footerBuyMe">Buy me</span>
+            <span class="footer-strike" data-i18n="footerCoffee">a coffee</span>
+            <strong data-i18n="footerTokens">some tokens</strong>
             <svg class="footer-cup" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M5 5h10v6a5 5 0 0 1-10 0V5Z"></path>
                 <path d="M15 7h2a3 3 0 0 1 0 6h-2"></path>
@@ -713,7 +928,9 @@
                 gameOverTitle: "Game Over", tryAgain: "TRY AGAIN",
                 ariaSound: "Toggle Sound", ariaTheme: "Toggle Theme", ariaLang: "Change Language",
                 ariaArcade: "Arcade Mode", ariaZen: "Zen Mode", ariaChrono: "Chrono Mode", ariaPrint: "Print Mode",
-                ariaHint: "Hint", ariaDraft: "Draft mode", ariaAutoNotes: "Auto-Notes", ariaSafeMoves: "Safe moves", ariaPause: "Pause", ariaQuit: "Quit"
+                ariaHint: "Hint", ariaDraft: "Draft mode", ariaAutoNotes: "Auto-Notes", ariaSafeMoves: "Safe moves", ariaPause: "Pause", ariaQuit: "Quit",
+                kbTitle: "Shortcuts", kbDigit: "Enter digit", kbDelete: "Delete", kbArrows: "Move", kbDraft: "Notes mode", kbHint: "Hint", kbPause: "Pause", kbQuit: "Quit",
+                footerSource: "Source code and support:", footerBuyMe: "Buy me", footerCoffee: "a coffee", footerTokens: "some tokens"
             },
             zh: {
                 sudoku: "數独", sudokuSub: "SUDOKU", chooseMode: "选择模式：", chooseLevel: "选择难度：",
@@ -736,7 +953,9 @@
                 gameOverTitle: "游戏结束", tryAgain: "再试一次",
                 ariaSound: "切换声音", ariaTheme: "切换主题", ariaLang: "切换语言",
                 ariaArcade: "街机模式", ariaZen: "禅模式", ariaChrono: "计时模式", ariaPrint: "打印模式",
-                ariaHint: "提示", ariaDraft: "草稿模式", ariaAutoNotes: "自动笔记", ariaSafeMoves: "安全填充", ariaPause: "暂停", ariaQuit: "退出"
+                ariaHint: "提示", ariaDraft: "草稿模式", ariaAutoNotes: "自动笔记", ariaSafeMoves: "安全填充", ariaPause: "暂停", ariaQuit: "退出",
+                kbTitle: "快捷键", kbDigit: "输入数字", kbDelete: "删除", kbArrows: "移动", kbDraft: "笔记模式", kbHint: "提示", kbPause: "暂停", kbQuit: "退出",
+                footerSource: "源码与支持：", footerBuyMe: "请我喝", footerCoffee: "咖啡", footerTokens: "tokens"
             },
             hi: {
                 sudoku: "數独", sudokuSub: "सूडोकू", chooseMode: "अपना मोड चुनें:", chooseLevel: "अपना स्तर चुनें:",
@@ -759,7 +978,9 @@
                 gameOverTitle: "खेल खत्म", tryAgain: "पुनः प्रयास करें",
                 ariaSound: "ध्वनि टॉगल", ariaTheme: "थीम टॉगल", ariaLang: "भाषा बदलें",
                 ariaArcade: "आर्केड मोड", ariaZen: "ज़ेन मोड", ariaChrono: "क्रोनो मोड", ariaPrint: "प्रिंट मोड",
-                ariaHint: "संकेत", ariaDraft: "ड्राफ्ट मोड", ariaAutoNotes: "ऑटो-नोट्स", ariaSafeMoves: "सुरक्षित चालें", ariaPause: "विराम", ariaQuit: "छोड़ें"
+                ariaHint: "संकेत", ariaDraft: "ड्राफ्ट मोड", ariaAutoNotes: "ऑटो-नोट्स", ariaSafeMoves: "सुरक्षित चालें", ariaPause: "विराम", ariaQuit: "छोड़ें",
+                kbTitle: "शॉर्टकट", kbDigit: "अंक दर्ज करें", kbDelete: "हटाएं", kbArrows: "नेविगेट", kbDraft: "नोट्स मोड", kbHint: "संकेत", kbPause: "विराम", kbQuit: "छोड़ें",
+                footerSource: "सोर्स कोड और सहायता:", footerBuyMe: "मुझे", footerCoffee: "कॉफी", footerTokens: "tokens दिलाएं"
             },
             es: {
                 sudoku: "數独", sudokuSub: "SUDOKU", chooseMode: "Elige tu modo:", chooseLevel: "Elige tu nivel:",
@@ -782,7 +1003,9 @@
                 gameOverTitle: "Fin del Juego", tryAgain: "REINTENTAR",
                 ariaSound: "Activar/Silenciar", ariaTheme: "Cambiar tema", ariaLang: "Cambiar idioma",
                 ariaArcade: "Modo Arcade", ariaZen: "Modo Zen", ariaChrono: "Modo Chrono", ariaPrint: "Modo Impresión",
-                ariaHint: "Pista", ariaDraft: "Modo notas", ariaAutoNotes: "Auto-Notas", ariaSafeMoves: "Movimientos seguros", ariaPause: "Pausa", ariaQuit: "Salir"
+                ariaHint: "Pista", ariaDraft: "Modo notas", ariaAutoNotes: "Auto-Notas", ariaSafeMoves: "Movimientos seguros", ariaPause: "Pausa", ariaQuit: "Salir",
+                kbTitle: "Atajos", kbDigit: "Introducir cifra", kbDelete: "Borrar", kbArrows: "Mover", kbDraft: "Modo notas", kbHint: "Pista", kbPause: "Pausa", kbQuit: "Salir",
+                footerSource: "Código fuente y soporte:", footerBuyMe: "Invítame a", footerCoffee: "un café", footerTokens: "unos tokens"
             },
             fr: {
                 sudoku: "數独", sudokuSub: "SUDOKU", chooseMode: "Choisissez votre mode :", chooseLevel: "Choisissez votre niveau :",
@@ -805,7 +1028,9 @@
                 gameOverTitle: "Partie Terminée", tryAgain: "RÉESSAYER",
                 ariaSound: "Activer/Couper le son", ariaTheme: "Changer le thème", ariaLang: "Changer la langue",
                 ariaArcade: "Mode Arcade", ariaZen: "Mode Zen", ariaChrono: "Mode Chrono", ariaPrint: "Mode Impression",
-                ariaHint: "Indice", ariaDraft: "Mode notes", ariaAutoNotes: "Auto-Notes", ariaSafeMoves: "Coups sûrs", ariaPause: "Pause", ariaQuit: "Quitter"
+                ariaHint: "Indice", ariaDraft: "Mode notes", ariaAutoNotes: "Auto-Notes", ariaSafeMoves: "Coups sûrs", ariaPause: "Pause", ariaQuit: "Quitter",
+                kbTitle: "Raccourcis", kbDigit: "Saisir un chiffre", kbDelete: "Effacer", kbArrows: "Déplacer", kbDraft: "Mode notes", kbHint: "Indice", kbPause: "Pause", kbQuit: "Quitter",
+                footerSource: "Code source et support :", footerBuyMe: "Offrez-moi", footerCoffee: "un café", footerTokens: "des tokens"
             },
             ja: {
                 sudoku: "數独", sudokuSub: "SUDOKU", chooseMode: "モードを選択:", chooseLevel: "難易度を選択:",
@@ -828,7 +1053,9 @@
                 gameOverTitle: "ゲームオーバー", tryAgain: "もう一度",
                 ariaSound: "音声の切替", ariaTheme: "テーマの切替", ariaLang: "言語の変更",
                 ariaArcade: "アーケードモード", ariaZen: "禅モード", ariaChrono: "クロノモード", ariaPrint: "印刷モード",
-                ariaHint: "ヒント", ariaDraft: "メモモード", ariaAutoNotes: "自動メモ", ariaSafeMoves: "確定マス", ariaPause: "一時停止", ariaQuit: "終了"
+                ariaHint: "ヒント", ariaDraft: "メモモード", ariaAutoNotes: "自動メモ", ariaSafeMoves: "確定マス", ariaPause: "一時停止", ariaQuit: "終了",
+                kbTitle: "ショートカット", kbDigit: "数字を入力", kbDelete: "削除", kbArrows: "移動", kbDraft: "メモモード", kbHint: "ヒント", kbPause: "一時停止", kbQuit: "終了",
+                footerSource: "ソースコードとサポート：", footerBuyMe: "奢ってください", footerCoffee: "コーヒー", footerTokens: "tokens"
             }
         };
 
@@ -920,6 +1147,11 @@
                 else if (name === 'win') {
                     setTimeout(() => this.balafon(523.25), 0); setTimeout(() => this.balafon(659.25), 150);
                     setTimeout(() => this.balafon(783.99), 300); setTimeout(() => this.balafon(1046.50), 450);
+                }
+                else if (name === 'digit_complete') {
+                    // Joyful ascending arpeggio for completing all 9 of a digit
+                    const notes = [659.25, 783.99, 880.00, 1046.50, 1174.66];
+                    notes.forEach((freq, i) => setTimeout(() => this.balafon(freq), i * 80));
                 }
             }
         };
@@ -1098,7 +1330,7 @@
                     numpad.appendChild(btn);
                 }
                 const delBtn = document.createElement('button');
-                delBtn.className = 'num-btn';
+                delBtn.className = 'num-btn del-btn';
                 delBtn.style.color = 'var(--heart-color)';
                 delBtn.textContent = '⌫';
                 delBtn.addEventListener('pointerdown', (e) => { e.preventDefault(); Game.clearCell(); });
@@ -1113,7 +1345,28 @@
                         let left = 9 - counts[i];
                         el.textContent = left > 0 ? left : '';
                         let btn = document.getElementById(`btn-num-${i}`);
-                        if(left <= 0) btn.classList.add('completed'); else btn.classList.remove('completed');
+                        const wasCompleted = btn.classList.contains('completed');
+                        if(left <= 0) {
+                            if (!wasCompleted) {
+                                // Newly completed! Trigger animation and sound
+                                btn.classList.add('digit-complete-anim');
+                                Sound.play('digit_complete');
+                                setTimeout(() => btn.classList.remove('digit-complete-anim'), 650);
+                                // Show floating toast on the grid
+                                const gridContainer = document.querySelector('.sudoku-container');
+                                if (gridContainer) {
+                                    const toast = document.createElement('div');
+                                    toast.className = 'digit-toast';
+                                    toast.textContent = `✓ ${i} × 9`;
+                                    gridContainer.style.position = 'relative';
+                                    gridContainer.appendChild(toast);
+                                    setTimeout(() => toast.remove(), 1500);
+                                }
+                            }
+                            btn.classList.add('completed');
+                        } else {
+                            btn.classList.remove('completed');
+                        }
                     }
                 }
             },
@@ -1158,7 +1411,11 @@
                 UI.refreshResumeButton(); 
             },
             
-            showScreen: (id) => { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); if (id === 'scoresScreen') UI.renderScores(); },
+            showScreen: (id) => { 
+                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); 
+                document.getElementById(id).classList.add('active'); 
+                if (id === 'scoresScreen') UI.renderScores();
+            },
             
             selectMode: (mode, fromInit = false) => { 
                 State.mode = mode; 
@@ -1509,6 +1766,11 @@
                 if(State.status[r][c] === 1 || State.status[r][c] === 2) return;
 
                 if (State.draftMode) {
+                    // If the cell has an error (status=3), clear it first before adding a note
+                    if (State.status[r][c] === 3) {
+                        State.grid[r][c] = 0;
+                        State.status[r][c] = 0;
+                    }
                     let key = `${r}-${c}`; if(!State.drafts[key]) State.drafts[key] = new Set();
                     if(State.drafts[key].has(num)) State.drafts[key].delete(num); else State.drafts[key].add(num);
                     UI.updateCellDOM(r, c); Sound.play('write');
